@@ -16,11 +16,11 @@ export default function App() {
   const [tolerancia, setTolerancia] = useState(5);
   
   const [catalogo, setCatalogo] = useState([
-    { id: 1, nombre: 'Pan Chico Vainilla', ideal: 660, etapa1: 415, etapa2: 245 },
-    { id: 2, nombre: 'Pan Mediano Vainilla', ideal: 815, etapa1: 440, etapa2: 375 },
-    { id: 3, nombre: 'Pan Grande Vainilla', ideal: 575, etapa1: 315, etapa2: 210 },
-    { id: 4, nombre: 'Rosca Chica Vainilla', ideal: 570, etapa1: 315, etapa2: 255 },
-    { id: 5, nombre: 'Rosca Grande Vainilla', ideal: 950, etapa1: 525, etapa2: 425 },
+    { id: 1, nombre: 'Pan Chico vainilla', ideal: 660, etapa1: 415, etapa2: 245 },
+    { id: 2, nombre: 'Pan Mediano vainilla', ideal: 815, etapa1: 440, etapa2: 375 },
+    { id: 3, nombre: 'Pan Grande vainilla', ideal: 575, etapa1: 315, etapa2: 255 },
+    { id: 4, nombre: 'Rosca Chica vainilla', ideal: 570, etapa1: 315, etapa2: 255 },
+    { id: 5, nombre: 'Rosca Grande vainilla', ideal: 950, etapa1: 525, etapa2: 425 },
     { id: 6, nombre: 'Pan Mediano Chocolate', ideal: 900, etapa1: 540, etapa2: 360 },
     { id: 7, nombre: 'Pan 4 Leches', ideal: 815, etapa1: 440, etapa2: 375 },
     { id: 8, nombre: 'Rosca Nutella', ideal: 570, etapa1: 315, etapa2: 255 },
