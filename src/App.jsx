@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PlusCircle, FileText, BarChart2, Sliders, Save, Edit2 } from 'lucide-react';
 
 export default function App() {
@@ -29,6 +29,11 @@ export default function App() {
   
   const [producto, setProducto] = useState(catalogo[0]);
   const [editForm, setEditForm] = useState({});
+
+  // Refs para los inputs
+  const moldeRef = useRef(null);
+  const e1Ref = useRef(null);
+  const e2Ref = useRef(null);
 
   const getDesviacion = (valor, objetivo) => {
     if (!valor || !objetivo || objetivo === 0) return { diff: 0, pct: 0 };
@@ -72,6 +77,27 @@ export default function App() {
   };
 
   const liveInfo = getLiveDesviacion();
+
+  // Manejar tecla Enter en los inputs
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (step < 3) {
+        setStep(step + 1);
+      } else if (platoActual < 3) {
+        handleRegistrarPlato();
+      } else {
+        handleFinalizar();
+      }
+    }
+  };
+
+  // Focus automático en el input activo
+  useEffect(() => {
+    if (step === 1 && moldeRef.current) moldeRef.current.focus();
+    if (step === 2 && e1Ref.current) e1Ref.current.focus();
+    if (step === 3 && e2Ref.current) e2Ref.current.focus();
+  }, [step, platoActual]);
 
   const handleRegistrarPlato = () => {
     const molde = Number(moldeVacio);
@@ -213,29 +239,35 @@ export default function App() {
             
             {step === 1 && (
               <input 
+                ref={moldeRef}
                 type="number" 
                 className="w-full bg-[#0f1117] p-8 text-center text-4xl font-black rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 text-slate-100 placeholder-slate-600" 
                 placeholder="Molde(g)" 
                 value={moldeVacio} 
                 onChange={e => setMoldeVacio(e.target.value)} 
+                onKeyDown={handleKeyDown}
               />
             )}
             {step === 2 && (
               <input 
+                ref={e1Ref}
                 type="number" 
                 className="w-full bg-[#0f1117] p-8 text-center text-4xl font-black rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 text-slate-100 placeholder-slate-600" 
                 placeholder="Mold+E1(g)" 
                 value={pesoAcumuladoE1} 
                 onChange={e => setPesoAcumuladoE1(e.target.value)} 
+                onKeyDown={handleKeyDown}
               />
             )}
             {step === 3 && (
               <input 
+                ref={e2Ref}
                 type="number" 
                 className="w-full bg-[#0f1117] p-8 text-center text-4xl font-black rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 text-slate-100 placeholder-slate-600" 
                 placeholder="Total(g)" 
                 value={pesoAcumuladoE2} 
                 onChange={e => setPesoAcumuladoE2(e.target.value)} 
+                onKeyDown={handleKeyDown}
               />
             )}
             
@@ -247,13 +279,13 @@ export default function App() {
                 </div>
                 <div className="flex justify-between items-center mt-1">
                   <span className="text-[10px] text-slate-500">Desviación</span>
-                  <span className={`text-sm font-bold ${getStatusColor(Number(liveInfo.pct))}`}>
+                  <span className={`text-sm font-bold  ${getStatusColor(Number(liveInfo.pct))} `}>
                     {liveInfo.diff > 0 ? '+' : ''}{liveInfo.diff}g ({liveInfo.pct > 0 ? '+' : ''}{liveInfo.pct}%)
                   </span>
                 </div>
                 <div className="mt-2 h-1.5 bg-[#1c222d] rounded-full overflow-hidden">
                   <div 
-                    className={`h-full rounded-full ${Math.abs(Number(liveInfo.pct)) <= tolerancia ? 'bg-emerald-500' : 'bg-rose-500'}`}
+                    className={`h-full rounded-full  ${Math.abs(Number(liveInfo.pct)) <= tolerancia ? 'bg-emerald-500' : 'bg-rose-500'} `}
                     style={{ width: `${Math.min(Math.abs(Number(liveInfo.pct)) * 5, 100)}%` }}
                   />
                 </div>
@@ -270,7 +302,7 @@ export default function App() {
                   </button>
                 )}
                 <button 
-                  className={`py-4 rounded-2xl font-bold text-white ${step > 1 ? 'w-2/3' : 'w-full'} bg-blue-600`} 
+                  className={`py-4 rounded-2xl font-bold text-white  ${step > 1 ? 'w-2/3' : 'w-full'}  bg-blue-600`} 
                   onClick={() => {
                     if (step < 3) setStep(step + 1);
                     else if (platoActual < 3) handleRegistrarPlato();
@@ -299,22 +331,41 @@ export default function App() {
                       <p className="font-bold text-slate-100">{reg.producto}</p>
                       <p className="text-[10px] text-slate-500">{reg.fecha}</p>
                     </div>
-                    <span className="text-lg font-bold text-slate-100">{reg.total}g</span>
+                    <div className="text-right">
+                      <span className="text-lg font-bold text-slate-100">{reg.total}g</span>
+                      <p className={`text-[10px]  ${getStatusColor(reg.dTotal)} `}>{reg.dTotal > 0 ? '+' : ''}{reg.dTotal.toFixed(1)}%</p>
+                    </div>
                 </button>
                 {expandedId === reg.id && (
                     <div className="p-4 border-t border-[#252b36] text-[10px] space-y-3">
                         <div className="flex justify-between font-bold border-b border-[#2a3240] pb-2 text-slate-400 uppercase">
-                            <span>Plato</span>
-                            <span>E1 (Obj: {reg.targetE1}g)</span>
-                            <span>E2 (Obj: {reg.targetE2}g)</span>
+                            <span className="w-8">Plato</span>
+                            <span className="flex-1 text-center">E1 (Obj: {reg.targetE1}g)</span>
+                            <span className="flex-1 text-center">E2 (Obj: {reg.targetE2}g)</span>
+                            <span className="flex-1 text-center">Total (Obj: {reg.targetTotal}g)</span>
                         </div>
-                        {reg.detalles.map((d, i) => (
+                        {reg.detalles.map((d, i) => {
+                          const totalDev = getDesviacion(d.total, reg.targetTotal);
+                          return (
                            <div key={i} className="flex justify-between items-center bg-[#0f1117] p-2 rounded">
-                               <span className="font-bold text-slate-100">#{i+1}</span>
-                               <span className={getStatusColor(d.pctE1)}>{d.pesoE1}g ({d.pctE1.toFixed(1)}%)</span>
-                               <span className={getStatusColor(d.pctE2)}>{d.pesoE2}g ({d.pctE2.toFixed(1)}%)</span>
+                               <span className="font-bold text-slate-100 w-8">#{i+1}</span>
+                               <span className={`flex-1 text-center ${getStatusColor(d.pctE1)}`}>{d.pesoE1}g ({d.pctE1 > 0 ? '+' : ''}{d.pctE1.toFixed(1)}%)</span>
+                               <span className={`flex-1 text-center ${getStatusColor(d.pctE2)}`}>{d.pesoE2}g ({d.pctE2 > 0 ? '+' : ''}{d.pctE2.toFixed(1)}%)</span>
+                               <span className={`flex-1 text-center font-bold ${getStatusColor(totalDev.pct)}`}>
+                                 {d.total}g 
+                                 <span className="block text-[9px] opacity-80">
+                                   ({totalDev.diff > 0 ? '+' : ''}{totalDev.diff.toFixed(1)}g / {totalDev.pct > 0 ? '+' : ''}{totalDev.pct.toFixed(1)}%)
+                                 </span>
+                               </span>
                            </div>
-                        ))}
+                          );
+                        })}
+                        <div className="flex justify-between items-center pt-2 border-t border-[#2a3240] font-bold text-xs">
+                          <span className="w-8">Prom</span>
+                          <span className={`flex-1 text-center ${getStatusColor(reg.d1)}`}>E1: {reg.pesoE1}g</span>
+                          <span className={`flex-1 text-center ${getStatusColor(reg.d2)}`}>E2: {reg.pesoE2}g</span>
+                          <span className={`flex-1 text-center ${getStatusColor(reg.dTotal)}`}>Total: {reg.total}g</span>
+                        </div>
                     </div>
                 )}
                 </div>
@@ -425,27 +476,31 @@ export default function App() {
       <footer className="fixed bottom-0 w-full bg-[#151921] border-t border-[#252b36] p-4 grid grid-cols-4 text-center">
         <button 
           onClick={() => setActiveTab('medicion')} 
-          className={activeTab === 'medicion' ? 'text-blue-500' : 'text-slate-600'}
+          className={`flex flex-col items-center gap-1  ${activeTab === 'medicion' ? 'text-blue-500' : 'text-slate-600'} `}
         >
           <PlusCircle size={20}/>
+          <span className="text-[10px]">Medir</span>
         </button>
         <button 
           onClick={() => setActiveTab('historial')} 
-          className={activeTab === 'historial' ? 'text-blue-500' : 'text-slate-600'}
+          className={`flex flex-col items-center gap-1  ${activeTab === 'historial' ? 'text-blue-500' : 'text-slate-600'} `}
         >
           <FileText size={20}/>
+          <span className="text-[10px]">Historial</span>
         </button>
         <button 
           onClick={() => setActiveTab('estadisticas')} 
-          className={activeTab === 'estadisticas' ? 'text-blue-500' : 'text-slate-600'}
+          className={`flex flex-col items-center gap-1  ${activeTab === 'estadisticas' ? 'text-blue-500' : 'text-slate-600'} `}
         >
           <BarChart2 size={20}/>
+          <span className="text-[10px]">Stats</span>
         </button>
         <button 
           onClick={() => setActiveTab('ajustes')} 
-          className={activeTab === 'ajustes' ? 'text-blue-500' : 'text-slate-600'}
+          className={`flex flex-col items-center gap-1  ${activeTab === 'ajustes' ? 'text-blue-500' : 'text-slate-600'} `}
         >
           <Sliders size={20}/>
+          <span className="text-[10px]">Ajustes</span>
         </button>
       </footer>
     </div>
