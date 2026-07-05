@@ -30,7 +30,6 @@ export default function App() {
   const [producto, setProducto] = useState(catalogo[0]);
   const [editForm, setEditForm] = useState({});
 
-  // Refs para los inputs
   const moldeRef = useRef(null);
   const e1Ref = useRef(null);
   const e2Ref = useRef(null);
@@ -78,7 +77,6 @@ export default function App() {
 
   const liveInfo = getLiveDesviacion();
 
-  // Manejar tecla Enter en los inputs
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -92,7 +90,6 @@ export default function App() {
     }
   };
 
-  // Focus automático en el input activo
   useEffect(() => {
     if (step === 1 && moldeRef.current) moldeRef.current.focus();
     if (step === 2 && e1Ref.current) e1Ref.current.focus();
@@ -338,171 +335,17 @@ export default function App() {
                 </button>
                 {expandedId === reg.id && (
                     <div className="p-4 border-t border-[#252b36] text-[10px] space-y-3">
-                        <div className="flex justify-between font-bold border-b border-[#2a3240] pb-2 text-slate-400 uppercase">
-                            <span className="w-8">Plato</span>
-                            <span className="flex-1 text-center">E1 (Obj: {reg.targetE1}g)</span>
-                            <span className="flex-1 text-center">E2 (Obj: {reg.targetE2}g)</span>
-                            <span className="flex-1 text-center">Total (Obj: {reg.targetTotal}g)</span>
+                        {/* Encabezado tipo Excel */}
+                        <div className="grid grid-cols-5 gap-1 font-bold border-b border-[#2a3240] pb-2 text-slate-400 uppercase text-center">
+                            <span>Plato</span>
+                            <span>Dosf 1 (%)</span>
+                            <span>Dosf 2 (%)</span>
+                            <span>Total</span>
+                            <span>Dif. Total (%)</span>
                         </div>
                         {reg.detalles.map((d, i) => {
                           const totalDev = getDesviacion(d.total, reg.targetTotal);
                           return (
-                           <div key={i} className="flex justify-between items-center bg-[#0f1117] p-2 rounded">
-                               <span className="font-bold text-slate-100 w-8">#{i+1}</span>
-                               <span className={`flex-1 text-center ${getStatusColor(d.pctE1)}`}>{d.pesoE1}g ({d.pctE1 > 0 ? '+' : ''}{d.pctE1.toFixed(1)}%)</span>
-                               <span className={`flex-1 text-center ${getStatusColor(d.pctE2)}`}>{d.pesoE2}g ({d.pctE2 > 0 ? '+' : ''}{d.pctE2.toFixed(1)}%)</span>
-                               <span className={`flex-1 text-center font-bold ${getStatusColor(totalDev.pct)}`}>
-                                 {d.total}g 
-                                 <span className="block text-[9px] opacity-80">
-                                   ({totalDev.diff > 0 ? '+' : ''}{totalDev.diff.toFixed(1)}g / {totalDev.pct > 0 ? '+' : ''}{totalDev.pct.toFixed(1)}%)
-                                 </span>
-                               </span>
-                           </div>
-                          );
-                        })}
-                        <div className="flex justify-between items-center pt-2 border-t border-[#2a3240] font-bold text-xs">
-                          <span className="w-8">Prom</span>
-                          <span className={`flex-1 text-center ${getStatusColor(reg.d1)}`}>E1: {reg.pesoE1}g</span>
-                          <span className={`flex-1 text-center ${getStatusColor(reg.d2)}`}>E2: {reg.pesoE2}g</span>
-                          <span className={`flex-1 text-center ${getStatusColor(reg.dTotal)}`}>Total: {reg.total}g</span>
-                        </div>
-                    </div>
-                )}
-                </div>
-            ))}
-            </div>
-        )}
-
-        {activeTab === 'estadisticas' && (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <BarChart2 size={48} className="text-slate-600 mb-4" />
-            <h2 className="text-lg font-bold text-slate-400">Estadísticas</h2>
-            <p className="text-sm text-slate-600 mt-2">En desarrollo...</p>
-          </div>
-        )}
-
-        {activeTab === 'ajustes' && (
-          <div className="space-y-6">
-            <h2 className="text-lg font-bold">Ajustes</h2>
-            <div className="bg-[#151921] p-6 rounded-3xl border border-[#252b36]">
-              <label className="text-xs text-slate-400 font-bold uppercase">Tolerancia (%)</label>
-              <input 
-                type="range" 
-                min="0" 
-                max="20" 
-                className="w-full mt-2 accent-blue-500" 
-                value={tolerancia} 
-                onChange={e => setTolerancia(Number(e.target.value))} 
-              />
-              <span className="text-sm font-bold text-blue-400">{tolerancia}%</span>
-            </div>
-            <button 
-              onClick={() => setShowRecipeDash(!showRecipeDash)} 
-              className="w-full bg-blue-600 py-4 rounded-2xl font-bold text-white"
-            >
-              {showRecipeDash ? 'Ocultar Dashboard' : 'Dashboard de Recetas'}
-            </button>
-            {showRecipeDash && (
-              <div className="space-y-3">
-                {catalogo.map(p => (
-                  <div key={p.id} className="bg-[#151921] p-4 rounded-xl border border-[#252b36]">
-                    {editingRecipeId === p.id ? (
-                        <div className="space-y-2">
-                           <input 
-                             className="w-full bg-[#0f1117] p-2 rounded text-xs text-slate-100 outline-none border border-[#2a3240]" 
-                             value={editForm.nombre ?? ''} 
-                             onChange={e => setEditForm({...editForm, nombre: e.target.value})}
-                           />
-                           <div className="grid grid-cols-3 gap-2">
-                             <input 
-                               type="number" 
-                               className="bg-[#0f1117] p-2 rounded text-xs text-slate-100 outline-none border border-[#2a3240]" 
-                               placeholder="Ideal" 
-                               value={editForm.ideal ?? ''} 
-                               onChange={e => setEditForm({...editForm, ideal: Number(e.target.value) || 0})}
-                             />
-                             <input 
-                               type="number" 
-                               className="bg-[#0f1117] p-2 rounded text-xs text-slate-100 outline-none border border-[#2a3240]" 
-                               placeholder="E1" 
-                               value={editForm.etapa1 ?? ''} 
-                               onChange={e => setEditForm({...editForm, etapa1: Number(e.target.value) || 0})}
-                             />
-                             <input 
-                               type="number" 
-                               className="bg-[#0f1117] p-2 rounded text-xs text-slate-100 outline-none border border-[#2a3240]" 
-                               placeholder="E2" 
-                               value={editForm.etapa2 ?? ''} 
-                               onChange={e => setEditForm({...editForm, etapa2: Number(e.target.value) || 0})}
-                             />
-                           </div>
-                           <div className="flex gap-2">
-                             <button 
-                               className="flex-1 bg-emerald-600 p-2 rounded text-xs font-bold text-white" 
-                               onClick={() => updateRecipe(p.id)}
-                             >
-                               <Save className="inline mr-2" size={14}/>Guardar
-                             </button>
-                             <button 
-                               className="flex-1 bg-[#252b36] p-2 rounded text-xs font-bold text-slate-100" 
-                               onClick={cancelEditing}
-                             >
-                               Cancelar
-                             </button>
-                           </div>
-                        </div>
-                    ) : (
-                        <div className="flex justify-between items-center">
-                            <div>
-                              <p className="font-bold text-sm text-slate-100">{p.nombre}</p>
-                              <p className="text-[10px] text-slate-500">I:{p.ideal} | E1:{p.etapa1} | E2:{p.etapa2}</p>
-                            </div>
-                            <button 
-                              onClick={() => startEditing(p)} 
-                              className="text-slate-400"
-                            >
-                              <Edit2 size={16}/>
-                            </button>
-                        </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </main>
-
-      <footer className="fixed bottom-0 w-full bg-[#151921] border-t border-[#252b36] p-4 grid grid-cols-4 text-center">
-        <button 
-          onClick={() => setActiveTab('medicion')} 
-          className={`flex flex-col items-center gap-1  ${activeTab === 'medicion' ? 'text-blue-500' : 'text-slate-600'} `}
-        >
-          <PlusCircle size={20}/>
-          <span className="text-[10px]">Medir</span>
-        </button>
-        <button 
-          onClick={() => setActiveTab('historial')} 
-          className={`flex flex-col items-center gap-1  ${activeTab === 'historial' ? 'text-blue-500' : 'text-slate-600'} `}
-        >
-          <FileText size={20}/>
-          <span className="text-[10px]">Historial</span>
-        </button>
-        <button 
-          onClick={() => setActiveTab('estadisticas')} 
-          className={`flex flex-col items-center gap-1  ${activeTab === 'estadisticas' ? 'text-blue-500' : 'text-slate-600'} `}
-        >
-          <BarChart2 size={20}/>
-          <span className="text-[10px]">Stats</span>
-        </button>
-        <button 
-          onClick={() => setActiveTab('ajustes')} 
-          className={`flex flex-col items-center gap-1  ${activeTab === 'ajustes' ? 'text-blue-500' : 'text-slate-600'} `}
-        >
-          <Sliders size={20}/>
-          <span className="text-[10px]">Ajustes</span>
-        </button>
-      </footer>
-    </div>
-  );
-}
+                           <div key={i} className="grid grid-cols-5 gap-1 items-center bg-[#0f1117] p-2 rounded text-center">
+                               <span className="font-bold text-slate-100">#{i+1}</span>
+                               <span className={getStatusColor(d.pctE1)}>{d.pctE1 > 0 ? '+' : ''}{d.pctE1.toFixed(
