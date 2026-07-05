@@ -338,8 +338,8 @@ export default function App() {
                         {/* Encabezado tipo Excel */}
                         <div className="grid grid-cols-5 gap-1 font-bold border-b border-[#2a3240] pb-2 text-slate-400 uppercase text-center">
                             <span>Plato</span>
-                            <span>Dosf 1 (%)</span>
-                            <span>Dosf 2 (%)</span>
+                            <span>Dosf 1</span>
+                            <span>Dosf 2</span>
                             <span>Total</span>
                             <span>Dif. Total (%)</span>
                         </div>
@@ -348,23 +348,27 @@ export default function App() {
                           return (
                            <div key={i} className="grid grid-cols-5 gap-1 items-center bg-[#0f1117] p-2 rounded text-center">
                                <span className="font-bold text-slate-100">#{i+1}</span>
-                               <span className={getStatusColor(d.pctE1)}>{d.pctE1 > 0 ? '+' : ''}{d.pctE1.toFixed(1)}%</span>
-                               <span className={getStatusColor(d.pctE2)}>{d.pctE2 > 0 ? '+' : ''}{d.pctE2.toFixed(1)}%</span>
-                               <span className="text-slate-300">{d.total}g</span>
+                               {/* Dosf 1: gramos + porcentaje */}
+                               <span className="text-slate-300">
+                                 <span className="font-bold">{d.pesoE1}g</span>
+                                 <span className={`block text-[9px] ${getStatusColor(d.pctE1)}`}>
+                                   ({d.pctE1 > 0 ? '+' : ''}{d.pctE1.toFixed(1)}%)
+                                 </span>
+                               </span>
+                               {/* Dosf 2: gramos + porcentaje */}
+                               <span className="text-slate-300">
+                                 <span className="font-bold">{d.pesoE2}g</span>
+                                 <span className={`block text-[9px] ${getStatusColor(d.pctE2)}`}>
+                                   ({d.pctE2 > 0 ? '+' : ''}{d.pctE2.toFixed(1)}%)
+                                 </span>
+                               </span>
+                               <span className="text-slate-300 font-bold">{d.total}g</span>
                                <span className={`font-bold ${getStatusColor(totalDev.pct)}`}>
                                  {totalDev.pct > 0 ? '+' : ''}{totalDev.pct.toFixed(1)}%
                                </span>
                            </div>
                           );
                         })}
-                        {/* Fila de promedios */}
-                        <div className="grid grid-cols-5 gap-1 items-center pt-2 border-t border-[#2a3240] font-bold text-xs text-center">
-                          <span className="text-slate-400">Prom</span>
-                          <span className={getStatusColor(reg.d1)}>{reg.d1 > 0 ? '+' : ''}{reg.d1.toFixed(1)}%</span>
-                          <span className={getStatusColor(reg.d2)}>{reg.d2 > 0 ? '+' : ''}{reg.d2.toFixed(1)}%</span>
-                          <span className="text-slate-300">{reg.total}g</span>
-                          <span className={getStatusColor(reg.dTotal)}>{reg.dTotal > 0 ? '+' : ''}{reg.dTotal.toFixed(1)}%</span>
-                        </div>
                     </div>
                 )}
                 </div>
