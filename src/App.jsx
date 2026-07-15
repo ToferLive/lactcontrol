@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { PlusCircle, FileText, BarChart2, Sliders, Save, Edit2 } from 'lucide-react';
+import { PlusCircle, FileText, BarChart2, Sliders, Save, Edit2, Trash2 } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('medicion');
@@ -176,6 +176,14 @@ export default function App() {
     setPesoAcumuladoE2('');
   };
 
+  // NUEVO: Borrar un registro del historial
+  const handleBorrarRegistro = (id) => {
+    if (window.confirm('¿Seguro que quieres borrar este registro?')) {
+      setHistorial(historial.filter(reg => reg.id !== id));
+      if (expandedId === id) setExpandedId(null);
+    }
+  };
+
   const updateRecipe = (id) => {
     setCatalogo(catalogo.map(c => c.id === id ? { ...c, ...editForm } : c));
     if (producto.id === id) setProducto({ ...producto, ...editForm });
@@ -335,6 +343,17 @@ export default function App() {
                 </button>
                 {expandedId === reg.id && (
                     <div className="p-4 border-t border-[#252b36] text-[10px] space-y-3">
+                        {/* NUEVO: Botón de borrar */}
+                        <div className="flex justify-end mb-2">
+                          <button
+                            onClick={() => handleBorrarRegistro(reg.id)}
+                            className="flex items-center gap-1 text-rose-500 hover:text-rose-400 transition-colors text-[10px] font-bold uppercase"
+                          >
+                            <Trash2 size={12} />
+                            Borrar registro
+                          </button>
+                        </div>
+                        
                         {/* Encabezado tipo Excel */}
                         <div className="grid grid-cols-5 gap-1 font-bold border-b border-[#2a3240] pb-2 text-slate-400 uppercase text-center">
                             <span>Plato</span>
@@ -348,14 +367,12 @@ export default function App() {
                           return (
                            <div key={i} className="grid grid-cols-5 gap-1 items-center bg-[#0f1117] p-2 rounded text-center">
                                <span className="font-bold text-slate-100">#{i+1}</span>
-                               {/* Dosf 1: gramos + porcentaje */}
                                <span className="text-slate-300">
                                  <span className="font-bold">{d.pesoE1}g</span>
                                  <span className={`block text-[9px] ${getStatusColor(d.pctE1)}`}>
                                    ({d.pctE1 > 0 ? '+' : ''}{d.pctE1.toFixed(1)}%)
                                  </span>
                                </span>
-                               {/* Dosf 2: gramos + porcentaje */}
                                <span className="text-slate-300">
                                  <span className="font-bold">{d.pesoE2}g</span>
                                  <span className={`block text-[9px] ${getStatusColor(d.pctE2)}`}>
