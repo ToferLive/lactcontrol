@@ -1348,7 +1348,7 @@ export default function App() {
                 </section>
 
                 <section className="glass-panel p-4 text-center">
-                  <p className="text-[11px] text-steel">LactControl v2.1 · Estación de pesaje</p>
+                  <p className="text-[11px] text-steel">LactControl v2.0.1 · Estación de pesaje</p>
                   <p className="mt-1 flex items-center justify-center gap-1.5 text-[11px] text-steel">
                     <AlertCircle size={12} strokeWidth={2} />
                     Los datos se guardan localmente en este navegador
