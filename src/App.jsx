@@ -420,22 +420,42 @@ export default function App() {
   }, [tolerancia]);
 
   // Catálogo por defecto (idéntico a la versión anterior)
+  const CATALOGO_OFICIAL = [
+    { nombre: 'Pan Chico vainilla', ideal: 660, etapa1: 415, etapa2: 245 },
+    { nombre: 'Pan Mediano vainilla', ideal: 815, etapa1: 440, etapa2: 375 },
+    { nombre: 'Pan Grande vainilla', ideal: 575, etapa1: 315, etapa2: 260 },
+    { nombre: 'Rosca Chica vainilla', ideal: 570, etapa1: 315, etapa2: 255 },
+    { nombre: 'Rosca Grande vainilla', ideal: 950, etapa1: 525, etapa2: 425 },
+    { nombre: 'Pan Mediano Chocolate', ideal: 900, etapa1: 540, etapa2: 360 },
+    { nombre: 'Pan 4 Leches', ideal: 815, etapa1: 440, etapa2: 375 },
+    { nombre: 'Rosca Nutella', ideal: 570, etapa1: 315, etapa2: 255 },
+    { nombre: 'Bambino', ideal: 352, etapa1: 215, etapa2: 137 },
+  ];
+
   useEffect(() => {
     if (catalogo.length === 0) {
-      const defaults = [
-        { nombre: 'Pan Chico vainilla', ideal: 660, etapa1: 415, etapa2: 245 },
-        { nombre: 'Pan Mediano vainilla', ideal: 815, etapa1: 440, etapa2: 375 },
-        { nombre: 'Pan Grande vainilla', ideal: 575, etapa1: 315, etapa2: 255 },
-        { nombre: 'Rosca Chica vainilla', ideal: 570, etapa1: 315, etapa2: 255 },
-        { nombre: 'Rosca Grande vainilla', ideal: 950, etapa1: 525, etapa2: 425 },
-        { nombre: 'Pan Mediano Chocolate', ideal: 900, etapa1: 540, etapa2: 360 },
-        { nombre: 'Pan 4 Leches', ideal: 815, etapa1: 440, etapa2: 375 },
-        { nombre: 'Rosca Nutella', ideal: 570, etapa1: 315, etapa2: 255 },
-        { nombre: 'Bambino', ideal: 352, etapa1: 215, etapa2: 137 },
-      ];
-      setCatalogo(defaults);
+      setCatalogo(CATALOGO_OFICIAL);
       setProductoSel(0);
+      return;
     }
+    // Migración: actualiza gramajes de recetas oficiales que coincidan por nombre,
+    // preservando recetas personalizadas añadidas por el usuario.
+    const oficialesPorNombre = new Map(CATALOGO_OFICIAL.map((r) => [r.nombre, r]));
+    let cambio = false;
+    const migrado = catalogo.map((receta) => {
+      const oficial = oficialesPorNombre.get(receta.nombre);
+      if (oficial && (
+        receta.ideal !== oficial.ideal ||
+        receta.etapa1 !== oficial.etapa1 ||
+        receta.etapa2 !== oficial.etapa2
+      )) {
+        cambio = true;
+        return { ...receta, ideal: oficial.ideal, etapa1: oficial.etapa1, etapa2: oficial.etapa2 };
+      }
+      return receta;
+    });
+    if (cambio) setCatalogo(migrado);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [catalogo]);
 
   const currentProduct = catalogo[productoSel];
