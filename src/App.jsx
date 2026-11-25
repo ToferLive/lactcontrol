@@ -419,18 +419,18 @@ export default function App() {
     localStorage.setItem('lactcontrol-tolerancia', JSON.stringify(tolerancia));
   }, [tolerancia]);
 
-  // Catálogo por defecto
+  // Catálogo por defecto (idéntico a la versión anterior)
   useEffect(() => {
     if (catalogo.length === 0) {
       const defaults = [
         { nombre: 'Pan Chico vainilla', ideal: 660, etapa1: 415, etapa2: 245 },
-        { nombre: 'Pan Grande vainilla', ideal: 770, etapa1: 485, etapa2: 285 },
-        { nombre: 'Pan Chico chocolate', ideal: 660, etapa1: 415, etapa2: 245 },
-        { nombre: 'Pan Grande chocolate', ideal: 770, etapa1: 485, etapa2: 285 },
-        { nombre: 'Postre Chico vainilla', ideal: 150, etapa1: 95, etapa2: 55 },
-        { nombre: 'Postre Grande vainilla', ideal: 190, etapa1: 120, etapa2: 70 },
-        { nombre: 'Postre Chico chocolate', ideal: 150, etapa1: 95, etapa2: 55 },
-        { nombre: 'Postre Grande chocolate', ideal: 190, etapa1: 120, etapa2: 70 },
+        { nombre: 'Pan Mediano vainilla', ideal: 815, etapa1: 440, etapa2: 375 },
+        { nombre: 'Pan Grande vainilla', ideal: 575, etapa1: 315, etapa2: 255 },
+        { nombre: 'Rosca Chica vainilla', ideal: 570, etapa1: 315, etapa2: 255 },
+        { nombre: 'Rosca Grande vainilla', ideal: 950, etapa1: 525, etapa2: 425 },
+        { nombre: 'Pan Mediano Chocolate', ideal: 900, etapa1: 540, etapa2: 360 },
+        { nombre: 'Pan 4 Leches', ideal: 815, etapa1: 440, etapa2: 375 },
+        { nombre: 'Rosca Nutella', ideal: 570, etapa1: 315, etapa2: 255 },
         { nombre: 'Bambino', ideal: 352, etapa1: 215, etapa2: 137 },
       ];
       setCatalogo(defaults);
