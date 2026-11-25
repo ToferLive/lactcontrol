@@ -1016,8 +1016,8 @@ export default function App() {
                                         <span className="hidden sm:inline">Etapa 2 (g)</span>
                                       </th>
                                       <th className="pb-2 pr-2 text-right font-medium sm:pr-3">Total (g)</th>
-                                      <th className="hidden pb-2 pr-2 text-right font-medium sm:table-cell sm:pr-3">Desv. E1</th>
-                                      <th className="hidden pb-2 text-right font-medium sm:table-cell">Desv. E2</th>
+                                      <th className="pb-2 pr-2 text-right font-medium sm:pr-3">Desv. E1</th>
+                                      <th className="pb-2 text-right font-medium">Desv. E2</th>
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -1046,12 +1046,12 @@ export default function App() {
                                             {d.dTotal === null ? '' : `${signed(d.dTotal)}%`}
                                           </span>
                                         </td>
-                                        <td className="hidden py-2 pr-2 text-right tabular-nums sm:table-cell sm:pr-3">
+                                        <td className="py-2 pr-2 text-right tabular-nums sm:pr-3">
                                           <span className={d.d1 === null ? 'text-steel' : getStatusColor(d.d1, tolerancia)}>
                                             {d.d1 === null ? '—' : `${signed(d.d1)}%`}
                                           </span>
                                         </td>
-                                        <td className="hidden py-2 text-right tabular-nums sm:table-cell">
+                                        <td className="py-2 text-right tabular-nums">
                                           <span className={d.d2 === null ? 'text-steel' : getStatusColor(d.d2, tolerancia)}>
                                             {d.d2 === null ? '—' : `${signed(d.d2)}%`}
                                           </span>
