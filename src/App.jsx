@@ -720,8 +720,8 @@ export default function App() {
     <div className="relative min-h-screen">
       {/* Aura ambiente */}
       <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute -right-40 -top-52 h-[560px] w-[560px] rounded-full bg-electric/20 blur-[150px] animate-drift" />
-        <div className="absolute -left-56 bottom-[-14rem] h-[520px] w-[520px] rounded-full bg-cyan/10 blur-[150px] animate-drift" style={{ animationDirection: 'reverse' }} />
+        <div className="absolute -right-40 -top-52 h-[560px] w-[560px] rounded-full bg-electric/20 blur-[90px] transform-gpu will-change-transform animate-drift" />
+        <div className="absolute -left-56 bottom-[-14rem] h-[520px] w-[520px] rounded-full bg-cyan/10 blur-[90px] transform-gpu will-change-transform animate-drift" style={{ animationDirection: 'reverse' }} />
       </div>
 
       <div className="relative z-10">
