@@ -1015,9 +1015,7 @@ export default function App() {
                                         <span className="sm:hidden">E2 (g)</span>
                                         <span className="hidden sm:inline">Etapa 2 (g)</span>
                                       </th>
-                                      <th className="pb-2 pr-2 text-right font-medium sm:pr-3">Total (g)</th>
-                                      <th className="pb-2 pr-2 text-right font-medium sm:pr-3">Desv. E1</th>
-                                      <th className="pb-2 text-right font-medium">Desv. E2</th>
+                                      <th className="pb-2 text-right font-medium">Total (g)</th>
                                     </tr>
                                   </thead>
                                   <tbody>
