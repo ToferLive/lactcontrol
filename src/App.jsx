@@ -1007,15 +1007,15 @@ export default function App() {
                                   <thead>
                                     <tr className="border-b border-line/15 text-left text-[9px] font-semibold uppercase tracking-[0.12em] text-steel">
                                       <th className="pb-2 pr-2 font-medium sm:pr-3">Plato</th>
-                                      <th className="pb-2 pr-2 text-right font-medium sm:pr-3">
-                                        <span className="sm:hidden">E1 (g)</span>
-                                        <span className="hidden sm:inline">Etapa 1 (g)</span>
+                                      <th className="pb-2 pr-1.5 text-right font-medium sm:pr-3">
+                                        <span className="sm:hidden">E1</span>
+                                        <span className="hidden sm:inline">Etapa 1</span>
                                       </th>
-                                      <th className="pb-2 pr-2 text-right font-medium sm:pr-3">
-                                        <span className="sm:hidden">E2 (g)</span>
-                                        <span className="hidden sm:inline">Etapa 2 (g)</span>
+                                      <th className="pb-2 pr-1.5 text-right font-medium sm:pr-3">
+                                        <span className="sm:hidden">E2</span>
+                                        <span className="hidden sm:inline">Etapa 2</span>
                                       </th>
-                                      <th className="pb-2 text-right font-medium">Total (g)</th>
+                                      <th className="pb-2 text-right font-medium">Total</th>
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -1034,24 +1034,30 @@ export default function App() {
                                             <span className="block text-[9px] font-normal text-steel">molde {d.molde} g</span>
                                           )}
                                         </td>
-                                        <td className="py-2 pr-2 text-right tabular-nums text-mist sm:pr-3">{d.etapa1 ?? '—'}</td>
-                                        <td className="py-2 pr-2 text-right tabular-nums text-mist sm:pr-3">{d.etapa2 ?? '—'}</td>
+                                        <td className="py-2 pr-1.5 text-right tabular-nums sm:pr-3">
+                                          {d.etapa1 === null || d.etapa1 === undefined ? '—' : d.etapa1}
+                                          <span className={`mt-0.5 block text-[9px] font-medium ${
+                                            d.d1 === null ? 'text-steel' : getStatusColor(d.d1, tolerancia)
+                                          }`}>
+                                            {d.d1 === null || d.d1 === undefined ? '' : `${signed(d.d1)}%`}
+                                          </span>
+                                        </td>
+                                        <td className="py-2 pr-1.5 text-right tabular-nums sm:pr-3">
+                                          {d.etapa2 === null || d.etapa2 === undefined ? '—' : d.etapa2}
+                                          <span className={`mt-0.5 block text-[9px] font-medium ${
+                                            d.d2 === null ? 'text-steel' : getStatusColor(d.d2, tolerancia)
+                                          }`}>
+                                            {d.d2 === null || d.d2 === undefined ? '' : `${signed(d.d2)}%`}
+                                          </span>
+                                        </td>
                                         <td className={`py-2 pr-2 text-right font-semibold tabular-nums sm:pr-3 ${
                                           totalPlato === null ? 'text-steel' : getStatusColor(d.dTotal, tolerancia)
                                         }`}>
                                           {totalPlato === null ? '—' : totalPlato}
-                                          <span className="mt-0.5 block text-[9px] font-medium sm:hidden">
-                                            {d.dTotal === null ? '' : `${signed(d.dTotal)}%`}
-                                          </span>
-                                        </td>
-                                        <td className="py-2 pr-2 text-right tabular-nums sm:pr-3">
-                                          <span className={d.d1 === null ? 'text-steel' : getStatusColor(d.d1, tolerancia)}>
-                                            {d.d1 === null ? '—' : `${signed(d.d1)}%`}
-                                          </span>
-                                        </td>
-                                        <td className="py-2 text-right tabular-nums">
-                                          <span className={d.d2 === null ? 'text-steel' : getStatusColor(d.d2, tolerancia)}>
-                                            {d.d2 === null ? '—' : `${signed(d.d2)}%`}
+                                          <span className={`mt-0.5 block text-[9px] font-medium ${
+                                            d.dTotal === null ? 'text-steel' : getStatusColor(d.dTotal, tolerancia)
+                                          }`}>
+                                            {d.dTotal === null || d.dTotal === undefined ? '' : `${signed(d.dTotal)}%`}
                                           </span>
                                         </td>
                                       </tr>
