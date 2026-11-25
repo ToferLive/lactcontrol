@@ -142,13 +142,23 @@ const StepSegments = ({ step }) => {
   );
 };
 
-const WeightField = ({ inputRef, label, hint, value, placeholder, onChange, onKeyDown, readOnly, unit = 'g' }) => (
+const WeightField = ({ inputRef, label, hint, value, placeholder, onChange, onKeyDown, readOnly, unit = 'g', target, targetLabel = 'Objetivo' }) => (
   <div className="mt-6">
     <div className="flex flex-col items-start gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
       <label htmlFor="peso-actual" className="text-[11px] font-semibold uppercase tracking-[0.16em] text-steel">
         {label}
       </label>
-      {hint && <span className="text-[11px] text-steel/80">{hint}</span>}
+      <div className="flex items-center gap-2">
+        {target !== null && target !== undefined && (
+          <span
+            className="inline-flex items-center gap-1 rounded-full border border-cyan/40 bg-cyan/10 px-2.5 py-0.5 text-[11px] font-semibold tabular-nums text-cyan"
+            aria-label={`${targetLabel} ${target} gramos`}
+          >
+            {targetLabel} {target} g
+          </span>
+        )}
+        {hint && <span className="text-[11px] text-steel/80">{hint}</span>}
+      </div>
     </div>
     <div className={`mt-3 flex items-end justify-center gap-3 rounded-2xl border border-line/20 bg-void/60 px-4 py-5 transition-[border-color,box-shadow] duration-200 sm:py-7 ${
       readOnly ? '' : 'focus-within:border-cyan/60 focus-within:shadow-glow-cyan'
@@ -376,7 +386,14 @@ export default function App() {
   const [catalogo, setCatalogo] = useState([]);
   const [tolerancia, setTolerancia] = useState(2);
   const [editingIdx, setEditingIdx] = useState(null);
-  const [showRecipeDash, setShowRecipeDash] = useState(false);
+  const [showRecipeDash, setShowRecipeDash] = useState(() => {
+    try {
+      const saved = localStorage.getItem('lactcontrol-show-recipe');
+      return saved !== null ? JSON.parse(saved) : false;
+    } catch {
+      return false;
+    }
+  });
   const [expandedRegistro, setExpandedRegistro] = useState(null);
   const dropdownRef = useRef(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -418,6 +435,10 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('lactcontrol-tolerancia', JSON.stringify(tolerancia));
   }, [tolerancia]);
+
+  useEffect(() => {
+    localStorage.setItem('lactcontrol-show-recipe', JSON.stringify(showRecipeDash));
+  }, [showRecipeDash]);
 
   // Catálogo por defecto (idéntico a la versión anterior)
   const CATALOGO_OFICIAL = [
@@ -664,16 +685,16 @@ export default function App() {
 
   const fieldValue = step === 1 ? pesos.molde : step === 2 ? pesos.acumE1 : pesos.acumE2;
 
+  const recipeTarget =
+    step === 1 ? currentProduct?.ideal : step === 2 ? currentProduct?.etapa1 : currentProduct?.etapa2;
+  const fieldTarget = showRecipeDash ? recipeTarget : null;
+
   const fieldHint =
     step === 2 && live.etapa1 !== null
       ? `Etapa 1: ${live.etapa1} g`
       : step === 3 && live.etapa2 !== null
         ? `Etapa 2: ${live.etapa2} g · Total: ${live.total} g`
-        : showRecipeDash && step === 2
-          ? `Objetivo ${currentProduct?.etapa1} g`
-          : showRecipeDash && step === 3
-            ? `Objetivo ${currentProduct?.etapa2} g`
-            : null;
+        : null;
 
   const ayuda =
     step === 1
@@ -829,6 +850,7 @@ export default function App() {
                       placeholder={fieldPlaceholder}
                       onChange={fieldOnChange}
                       onKeyDown={handleKeyDown}
+                      target={fieldTarget}
                     />
 
                     <p id="peso-ayuda" className="mt-3 text-center text-[11px] text-steel">
